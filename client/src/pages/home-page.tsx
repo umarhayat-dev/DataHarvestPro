@@ -61,35 +61,39 @@ const HomePage = () => {
   ];
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Helmet>
         <title>Alyusr Quran Institute - Home</title>
         <meta name="description" content="Begin your Quran journey with Alyusr Quran Institute. Comprehensive Quranic education with expert instructors and flexible learning options." />
+        <meta property="og:title" content="Alyusr Quran Institute - Home" />
+        <meta property="og:description" content="Begin your Quran journey with Alyusr Quran Institute. Learn Quran with expert instructors." />
+        <meta property="og:type" content="website" />
       </Helmet>
       
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
+      <Navbar />
         
-        <main className="flex-grow">
-          {/* Hero Section */}
-          <section className="bg-primary text-white py-20">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div>
-                  <h1 className="text-4xl sm:text-5xl font-bold mb-4">Begin Your Quran Journey Today</h1>
-                  <p className="text-lg mb-8">Join Alyusr Quran Institute for comprehensive Quranic education with expert instructors and flexible learning options.</p>
-                  <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <Link href="/courses">
-                      <Button className="bg-white text-primary hover:bg-gray-100 w-full sm:w-auto">
-                        Explore Courses
-                      </Button>
-                    </Link>
-                    <Link href="/contact">
-                      <Button className="bg-accent text-white hover:bg-amber-600 w-full sm:w-auto">
-                        Contact Us
-                      </Button>
-                    </Link>
-                  </div>
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <section className="bg-primary text-white py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h1 className="text-4xl sm:text-5xl font-bold mb-4">Begin Your Quran Journey Today</h1>
+                <p className="text-lg mb-8">Join Alyusr Quran Institute for comprehensive Quranic education with expert instructors and flexible learning options.</p>
+                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                  <Link 
+                    href="/courses"
+                    className="bg-white text-primary hover:bg-gray-100 w-full sm:w-auto px-4 py-2 rounded-md font-medium text-center"
+                  >
+                    Explore Courses
+                  </Link>
+                  <Link 
+                    href="/contact"
+                    className="bg-accent text-white hover:bg-amber-600 w-full sm:w-auto px-4 py-2 rounded-md font-medium text-center"
+                  >
+                    Contact Us
+                  </Link>
+                </div>
                 </div>
                 <div className="hidden md:block">
                   <img 
@@ -209,11 +213,10 @@ const HomePage = () => {
               </div>
             </div>
           </section>
-        </main>
-        
-        <Footer />
-      </div>
-    </>
+      </main>
+      
+      <Footer />
+    </div>
   );
 };
 
