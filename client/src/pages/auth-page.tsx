@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CheckCircle2 } from 'lucide-react';
 import Navbar from '@/components/layout/navbar';
 import Footer from '@/components/layout/footer';
 
@@ -87,25 +87,27 @@ const AuthPage = () => {
   };
   
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Helmet>
         <title>Login or Register - Alyusr Quran Institute</title>
         <meta name="description" content="Join Alyusr Quran Institute. Login to your account or register for a new account to access our comprehensive Quranic education programs." />
+        <meta property="og:title" content="Login or Register - Alyusr Quran Institute" />
+        <meta property="og:description" content="Join Alyusr Quran Institute. Access our comprehensive Quranic education programs." />
+        <meta property="og:type" content="website" />
       </Helmet>
       
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        
-        <main className="flex-grow">
-          <div className="bg-gray-50 py-12">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="max-w-6xl mx-auto">
-                <div className="flex flex-col lg:flex-row bg-white rounded-lg shadow-md overflow-hidden">
-                  <div className="lg:w-1/2 p-8">
-                    <div className="text-center mb-8">
-                      <h1 className="text-2xl font-bold text-gray-900">Welcome to Alyusr Quran Institute</h1>
-                      <p className="text-gray-600 mt-2">Sign in to your account or create a new one</p>
-                    </div>
+      <Navbar />
+      
+      <main className="flex-grow">
+        <div className="bg-background py-12">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex flex-col lg:flex-row bg-card rounded-lg shadow-md overflow-hidden">
+                <div className="lg:w-1/2 p-8">
+                  <div className="text-center mb-8">
+                    <h1 className="text-2xl font-bold">Welcome to Alyusr Quran Institute</h1>
+                    <p className="text-muted-foreground mt-2">Sign in to your account or create a new one</p>
+                  </div>
                     
                     <Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab}>
                       <TabsList className="grid w-full grid-cols-2 mb-8">
@@ -297,30 +299,30 @@ const AuthPage = () => {
                     </Tabs>
                   </div>
                   
-                  <div className="lg:w-1/2 bg-primary text-white p-8 flex flex-col justify-center">
+                  <div className="lg:w-1/2 bg-primary text-primary-foreground p-8 flex flex-col justify-center">
                     <div className="max-w-md mx-auto">
                       <h2 className="text-3xl font-bold mb-4">Begin Your Quranic Journey</h2>
                       <p className="mb-6">Join Alyusr Quran Institute and gain access to comprehensive Quranic education with expert instructors and flexible learning options.</p>
                       
                       <div className="space-y-4">
                         <div className="flex items-center">
-                          <span className="material-icons mr-2">check_circle</span>
+                          <CheckCircle2 className="h-5 w-5 mr-2 text-accent" />
                           <span>Expert instructors with ijazah certification</span>
                         </div>
                         <div className="flex items-center">
-                          <span className="material-icons mr-2">check_circle</span>
+                          <CheckCircle2 className="h-5 w-5 mr-2 text-accent" />
                           <span>Flexible learning options - online and in-person</span>
                         </div>
                         <div className="flex items-center">
-                          <span className="material-icons mr-2">check_circle</span>
+                          <CheckCircle2 className="h-5 w-5 mr-2 text-accent" />
                           <span>Comprehensive curriculum for all levels</span>
                         </div>
                         <div className="flex items-center">
-                          <span className="material-icons mr-2">check_circle</span>
+                          <CheckCircle2 className="h-5 w-5 mr-2 text-accent" />
                           <span>Personalized feedback and guidance</span>
                         </div>
                         <div className="flex items-center">
-                          <span className="material-icons mr-2">check_circle</span>
+                          <CheckCircle2 className="h-5 w-5 mr-2 text-accent" />
                           <span>Join a global community of learners</span>
                         </div>
                       </div>
@@ -334,7 +336,6 @@ const AuthPage = () => {
         
         <Footer />
       </div>
-    </>
   );
 };
 

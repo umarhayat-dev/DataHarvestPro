@@ -29,6 +29,35 @@ async function comparePasswords(supplied: string, stored: string) {
   return timingSafeEqual(hashedBuf, suppliedBuf);
 }
 
+// Function to create an admin user
+export async function createAdminUser(username: string, password: string) {
+  try {
+    // Check if the admin already exists
+    const existingUser = await storage.getUserByUsername(username);
+    if (existingUser) {
+      console.log('Admin user already exists.');
+      return existingUser;
+    }
+
+    // Create the admin user
+    const adminUser = await storage.createUser({
+      username,
+      password: await hashPassword(password),
+      email: null,
+      firstName: 'Admin',
+      lastName: 'User',
+      profileImageUrl: null,
+      isAdmin: true
+    });
+
+    console.log('Admin user created successfully:', username);
+    return adminUser;
+  } catch (error) {
+    console.error('Error creating admin user:', error);
+    throw error;
+  }
+}
+
 export function setupAuth(app: Express) {
   const sessionSettings: session.SessionOptions = {
     secret: process.env.SESSION_SECRET || createId(),

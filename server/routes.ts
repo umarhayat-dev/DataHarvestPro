@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated, isAdmin } from "./auth";
+import { setupAuth, isAuthenticated, isAdmin, createAdminUser } from "./auth";
 import { 
   insertCategorySchema, 
   insertCourseSchema, 
@@ -16,6 +16,14 @@ import {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes and middleware
   setupAuth(app);
+  
+  // Create admin user
+  try {
+    await createAdminUser('admin', 'AdminPass123');
+    console.log('Admin user setup completed');
+  } catch (error) {
+    console.error('Error setting up admin user:', error);
+  }
 
   // Public routes
   
