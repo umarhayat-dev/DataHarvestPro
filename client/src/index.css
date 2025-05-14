@@ -3,49 +3,51 @@
 @tailwind utilities;
 
 :root {
-      --background: 0 0% 100%;
---foreground: 20 14.3% 4.1%;
---muted: 60 4.8% 95.9%;
---muted-foreground: 25 5.3% 44.7%;
---popover: 0 0% 100%;
---popover-foreground: 20 14.3% 4.1%;
---card: 0 0% 100%;
---card-foreground: 20 14.3% 4.1%;
---border: 20 5.9% 90%;
---input: 20 5.9% 90%;
---primary: 207 90% 54%;
---primary-foreground: 211 100% 99%;
---secondary: 60 4.8% 95.9%;
---secondary-foreground: 24 9.8% 10%;
---accent: 60 4.8% 95.9%;
---accent-foreground: 24 9.8% 10%;
---destructive: 0 84.2% 60.2%;
---destructive-foreground: 60 9.1% 97.8%;
---ring: 20 14.3% 4.1%;
---radius: 0.5rem;
-  }
+  /* Olive and off-white theme */
+  --background: 60 30% 96%; /* Off-white background */
+  --foreground: 20 14.3% 4.1%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --popover: 60 30% 96%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --primary: 80 40% 40%; /* Olive green */
+  --primary-foreground: 60 30% 96%;
+  --secondary: 80 25% 60%; /* Lighter olive */
+  --secondary-foreground: 24 9.8% 10%;
+  --accent: 45 70% 85%; /* Light cream accent */
+  --accent-foreground: 24 9.8% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 80 40% 40%;
+  --radius: 0.5rem;
+}
   .dark {
-      --background: 240 10% 3.9%;
---foreground: 0 0% 98%;
---muted: 240 3.7% 15.9%;
---muted-foreground: 240 5% 64.9%;
---popover: 240 10% 3.9%;
---popover-foreground: 0 0% 98%;
---card: 240 10% 3.9%;
---card-foreground: 0 0% 98%;
---border: 240 3.7% 15.9%;
---input: 240 3.7% 15.9%;
---primary: 207 90% 54%;
---primary-foreground: 211 100% 99%;
---secondary: 240 3.7% 15.9%;
---secondary-foreground: 0 0% 98%;
---accent: 240 3.7% 15.9%;
---accent-foreground: 0 0% 98%;
---destructive: 0 62.8% 30.6%;
---destructive-foreground: 0 0% 98%;
---ring: 240 4.9% 83.9%;
---radius: 0.5rem;
-  }
+  /* Dark olive theme */
+  --background: 80 15% 15%; /* Dark olive background */
+  --foreground: 60 30% 96%;
+  --muted: 80 15% 20%;
+  --muted-foreground: 60 10% 80%;
+  --popover: 80 15% 15%;
+  --popover-foreground: 60 30% 96%;
+  --card: 80 15% 18%;
+  --card-foreground: 60 30% 96%;
+  --border: 80 15% 25%;
+  --input: 80 15% 25%;
+  --primary: 80 30% 50%; /* Brighter olive in dark mode */
+  --primary-foreground: 60 30% 96%;
+  --secondary: 60 20% 40%;
+  --secondary-foreground: 60 30% 96%;
+  --accent: 45 40% 50%;
+  --accent-foreground: 60 30% 96%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 80 30% 50%;
+  --radius: 0.5rem;
+}
 
 @layer base {
   * {
