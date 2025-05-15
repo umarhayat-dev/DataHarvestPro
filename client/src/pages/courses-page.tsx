@@ -36,7 +36,7 @@ const CoursesPage = () => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           course.description.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesCategory = selectedCategory === '' || 
+    const matchesCategory = selectedCategory === 'all' || 
                            (course.categoryId && course.categoryId.toString() === selectedCategory);
     
     return matchesSearch && matchesCategory;
@@ -95,7 +95,7 @@ const CoursesPage = () => {
                       <SelectValue placeholder="All Categories" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Categories</SelectItem>
+                      <SelectItem value="all">All Categories</SelectItem>
                       {categories?.map((category) => (
                         <SelectItem key={category.id} value={category.id.toString()}>
                           {category.name}

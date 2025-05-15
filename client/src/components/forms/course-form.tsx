@@ -30,12 +30,25 @@ interface CourseFormProps {
 }
 
 // Schema for form validation
-const courseFormSchema = insertCourseSchema.extend({
-  price: z.string().refine(val => !isNaN(Number(val)) && Number(val) >= 0, {
-    message: "Price must be a valid number and greater than or equal to 0",
-  }),
-  categoryId: z.coerce.number().nullable(),
-}).omit({ rating: true, reviewCount: true });
+const courseFormSchema = insertCourseSchema
+  .extend({
+    price: z.string().refine(
+      (val) => {
+        const num = Number(val);
+        return !isNaN(num) && num >= 0 && num <= 99999999.99;
+      },
+      {
+        message: "Price must be a valid number between 0 and 99,999,999.99",
+      }
+    ),
+    categoryId: z.string().nullable().or(z.literal("all")),
+    image: z.string().nullable(),
+    duration: z.string().nullable(),
+    instructorName: z.string().nullable(),
+    instructorTitle: z.string().nullable(),
+    instructorImage: z.string().nullable(),
+  })
+  .omit({ rating: true, reviewCount: true });
 
 type CourseFormValues = z.infer<typeof courseFormSchema>;
 
@@ -47,21 +60,27 @@ const CourseForm = ({ course, categories, onSuccess, isEditing = false }: Course
     if (course) {
       return {
         ...course,
-        price: course.price.toString(),
+        price: typeof course.price === "number" ? course.price.toFixed(2) : course.price,
+        categoryId: course.categoryId ? course.categoryId.toString() : "all",
+        image: course.image ?? null,
+        duration: course.duration ?? null,
+        instructorName: course.instructorName ?? null,
+        instructorTitle: course.instructorTitle ?? null,
+        instructorImage: course.instructorImage ?? null,
       };
     }
     
     return {
       title: "",
       description: "",
-      image: "",
-      duration: "",
-      price: "",
+      image: null,
+      duration: null,
+      price: "0.00",
       featured: false,
-      categoryId: null,
-      instructorName: "",
-      instructorTitle: "",
-      instructorImage: "",
+      categoryId: "all",
+      instructorName: null,
+      instructorTitle: null,
+      instructorImage: null,
       active: true,
     };
   };
@@ -75,13 +94,23 @@ const CourseForm = ({ course, categories, onSuccess, isEditing = false }: Course
   // Handle form submission
   const mutation = useMutation({
     mutationFn: async (values: CourseFormValues) => {
+      // Convert form values to match API expectations
+      const apiValues = {
+        ...values,
+        price: Number(values.price),
+        categoryId: values.categoryId || undefined,
+        image: values.image || undefined,
+        duration: values.duration || undefined,
+        instructorName: values.instructorName || undefined,
+        instructorTitle: values.instructorTitle || undefined,
+        instructorImage: values.instructorImage || undefined,
+      };
+
       if (isEditing && course) {
-        // Update existing course
-        const response = await apiRequest('PATCH', `/api/courses/${course.id}`, values);
+        const response = await apiRequest('PATCH', `/api/courses/${course.id}`, apiValues);
         return response.json();
       } else {
-        // Create new course
-        const response = await apiRequest('POST', '/api/courses', values);
+        const response = await apiRequest('POST', '/api/courses', apiValues);
         return response.json();
       }
     },
@@ -95,7 +124,7 @@ const CourseForm = ({ course, categories, onSuccess, isEditing = false }: Course
       form.reset();
       if (onSuccess) onSuccess();
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast({
         title: isEditing ? "Update failed" : "Creation failed",
         description: error.message || "There was an error. Please try again.",
@@ -157,6 +186,7 @@ const CourseForm = ({ course, categories, onSuccess, isEditing = false }: Course
                       placeholder="https://example.com/image.jpg" 
                       {...field} 
                       value={field.value || ''}
+                      onChange={(e) => field.onChange(e.target.value || null)}
                     />
                   </FormControl>
                   <FormDescription>
@@ -175,7 +205,12 @@ const CourseForm = ({ course, categories, onSuccess, isEditing = false }: Course
                   <FormItem>
                     <FormLabel>Duration</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., 12 weeks" {...field} value={field.value || ''} />
+                      <Input 
+                        placeholder="e.g., 12 weeks" 
+                        {...field} 
+                        value={field.value || ''} 
+                        onChange={(e) => field.onChange(e.target.value || null)}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -190,11 +225,18 @@ const CourseForm = ({ course, categories, onSuccess, isEditing = false }: Course
                     <FormLabel>Price <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input 
-                        type="number" 
-                        min="0" 
-                        step="0.01" 
+                        type="text" 
                         placeholder="e.g., 199.99" 
                         {...field}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          const num = Number(value);
+                          if (!isNaN(num)) {
+                            field.onChange(value);
+                          } else {
+                            field.onChange("");
+                          }
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -208,10 +250,10 @@ const CourseForm = ({ course, categories, onSuccess, isEditing = false }: Course
               name="categoryId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Category <span className="text-red-500">*</span></FormLabel>
                   <Select 
-                    onValueChange={(value) => field.onChange(value === "" ? null : parseInt(value))} 
-                    value={field.value?.toString() || ""}
+                    onValueChange={(value) => field.onChange(value === "all" ? "all" : value)} 
+                    value={field.value || "all"}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -219,9 +261,9 @@ const CourseForm = ({ course, categories, onSuccess, isEditing = false }: Course
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="">None</SelectItem>
+                      <SelectItem value="all">All Categories</SelectItem>
                       {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id.toString()}>
+                        <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>
                       ))}
@@ -242,7 +284,12 @@ const CourseForm = ({ course, categories, onSuccess, isEditing = false }: Course
                   <FormItem>
                     <FormLabel>Instructor Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Dr. Aminah Khan" {...field} value={field.value || ''} />
+                      <Input 
+                        placeholder="e.g., Dr. Aminah Khan" 
+                        {...field} 
+                        value={field.value || ''} 
+                        onChange={(e) => field.onChange(e.target.value || null)}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -256,7 +303,12 @@ const CourseForm = ({ course, categories, onSuccess, isEditing = false }: Course
                   <FormItem>
                     <FormLabel>Instructor Title</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Tajweed Specialist" {...field} value={field.value || ''} />
+                      <Input 
+                        placeholder="e.g., Tajweed Specialist" 
+                        {...field} 
+                        value={field.value || ''} 
+                        onChange={(e) => field.onChange(e.target.value || null)}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -274,7 +326,8 @@ const CourseForm = ({ course, categories, onSuccess, isEditing = false }: Course
                     <Input 
                       placeholder="https://example.com/instructor.jpg" 
                       {...field} 
-                      value={field.value || ''}
+                      value={field.value || ''} 
+                      onChange={(e) => field.onChange(e.target.value || null)}
                     />
                   </FormControl>
                   <FormMessage />

@@ -155,15 +155,15 @@ export class FirestoreStorage implements IStorage {
     id: string, 
     category: Partial<Omit<FirestoreCategory, 'id' | 'createdAt' | 'updatedAt'>>
   ): Promise<FirestoreCategory | undefined> {
-    const docRef = this.db.collection('categories').doc(id);
-    const doc = await docRef.get();
-    if (!doc.exists) return undefined;
+    const categoryRef = this.db.collection('categories').doc(id);
+    const categoryDoc = await categoryRef.get();
+    if (!categoryDoc.exists) return undefined;
 
     const updates = updateDocument<FirestoreCategory>(category);
-    await docRef.update(updates);
+    await categoryRef.update(updates);
     
-    const updated = await docRef.get();
-    return this.parseDoc<FirestoreCategory>(updated, categorySchema);
+    const updatedCategory = await categoryRef.get();
+    return this.parseDoc<FirestoreCategory>(updatedCategory, categorySchema);
   }
 
   // Course operations
@@ -215,30 +215,31 @@ export class FirestoreStorage implements IStorage {
       featured: course.featured ?? false,
       rating: course.rating ?? 0,
       reviewCount: course.reviewCount ?? 0,
-      // Optional fields
-      image: course.image || undefined,
-      duration: course.duration || undefined,
-      instructorName: course.instructorName || undefined,
-      instructorTitle: course.instructorTitle || undefined,
-      instructorImage: course.instructorImage || undefined
+      // Optional fields with null fallback
+      image: course.image ?? undefined,
+      duration: course.duration ?? undefined,
+      instructorName: course.instructorName ?? undefined,
+      instructorTitle: course.instructorTitle ?? undefined,
+      instructorImage: course.instructorImage ?? undefined
     });
     const docRef = await this.db.collection('courses').add(newCourse);
     return { ...newCourse, id: docRef.id } as FirestoreCourse;
   }
 
+
   async updateCourse(
     id: string, 
     course: Partial<Omit<FirestoreCourse, 'id' | 'createdAt' | 'updatedAt'>>
   ): Promise<FirestoreCourse | undefined> {
-    const docRef = this.db.collection('courses').doc(id);
-    const doc = await docRef.get();
-    if (!doc.exists) return undefined;
+    const courseRef = this.db.collection('courses').doc(id);
+    const courseDoc = await courseRef.get();
+    if (!courseDoc.exists) return undefined;
 
     const updates = updateDocument<FirestoreCourse>(course);
-    await docRef.update(updates);
+    await courseRef.update(updates);
     
-    const updated = await docRef.get();
-    return this.parseDoc<FirestoreCourse>(updated, courseSchema);
+    const updatedCourse = await courseRef.get();
+    return this.parseDoc<FirestoreCourse>(updatedCourse, courseSchema);
   }
 
   // Testimonial operations
@@ -268,15 +269,15 @@ export class FirestoreStorage implements IStorage {
     id: string, 
     testimonial: Partial<Omit<FirestoreTestimonial, 'id' | 'createdAt' | 'updatedAt'>>
   ): Promise<FirestoreTestimonial | undefined> {
-    const docRef = this.db.collection('testimonials').doc(id);
-    const doc = await docRef.get();
-    if (!doc.exists) return undefined;
+    const testimonialRef = this.db.collection('testimonials').doc(id);
+    const testimonialDoc = await testimonialRef.get();
+    if (!testimonialDoc.exists) return undefined;
 
     const updates = updateDocument<FirestoreTestimonial>(testimonial);
-    await docRef.update(updates);
+    await testimonialRef.update(updates);
     
-    const updated = await docRef.get();
-    return this.parseDoc<FirestoreTestimonial>(updated, testimonialSchema);
+    const updatedTestimonial = await testimonialRef.get();
+    return this.parseDoc<FirestoreTestimonial>(updatedTestimonial, testimonialSchema);
   }
 
   // Team member operations
@@ -306,15 +307,15 @@ export class FirestoreStorage implements IStorage {
     id: string, 
     member: Partial<Omit<FirestoreTeamMember, 'id' | 'createdAt' | 'updatedAt'>>
   ): Promise<FirestoreTeamMember | undefined> {
-    const docRef = this.db.collection('teamMembers').doc(id);
-    const doc = await docRef.get();
-    if (!doc.exists) return undefined;
+    const teamMemberRef = this.db.collection('teamMembers').doc(id);
+    const teamMemberDoc = await teamMemberRef.get();
+    if (!teamMemberDoc.exists) return undefined;
 
     const updates = updateDocument<FirestoreTeamMember>(member);
-    await docRef.update(updates);
+    await teamMemberRef.update(updates);
     
-    const updated = await docRef.get();
-    return this.parseDoc<FirestoreTeamMember>(updated, teamMemberSchema);
+    const updatedTeamMember = await teamMemberRef.get();
+    return this.parseDoc<FirestoreTeamMember>(updatedTeamMember, teamMemberSchema);
   }
 
   // Job operations
@@ -351,15 +352,15 @@ export class FirestoreStorage implements IStorage {
     id: string, 
     job: Partial<Omit<FirestoreJob, 'id' | 'createdAt' | 'updatedAt'>>
   ): Promise<FirestoreJob | undefined> {
-    const docRef = this.db.collection('jobs').doc(id);
-    const doc = await docRef.get();
-    if (!doc.exists) return undefined;
+    const jobRef = this.db.collection('jobs').doc(id);
+    const jobDoc = await jobRef.get();
+    if (!jobDoc.exists) return undefined;
 
     const updates = updateDocument<FirestoreJob>(job);
-    await docRef.update(updates);
+    await jobRef.update(updates);
     
-    const updated = await docRef.get();
-    return this.parseDoc<FirestoreJob>(updated, jobSchema);
+    const updatedJob = await jobRef.get();
+    return this.parseDoc<FirestoreJob>(updatedJob, jobSchema);
   }
 
   // Career application operations
@@ -383,29 +384,30 @@ export class FirestoreStorage implements IStorage {
       name: application.name,
       email: application.email,
       jobId: String(application.jobId),
-      // Optional fields with defaults
+      // Optional fields with null fallback
       status: application.status ?? 'pending',
-      phone: application.phone || undefined,
-      coverLetter: application.coverLetter || undefined,
-      resumeUrl: application.resumeUrl || undefined
+      phone: application.phone ?? undefined,
+      coverLetter: application.coverLetter ?? undefined,
+      resumeUrl: application.resumeUrl ?? undefined
     });
-    const docRef = await this.db.collection('careerApplications').add(newApplication);
-    return { ...newApplication as any, id: docRef.id };
+    const careerAppRef = await this.db.collection('careerApplications').add(newApplication);
+    return { ...newApplication as any, id: careerAppRef.id };
   }
+
 
   async updateCareerApplicationStatus(
     id: string, 
     status: FirestoreCareerApplication['status']
   ): Promise<FirestoreCareerApplication | undefined> {
-    const docRef = this.db.collection('careerApplications').doc(id);
-    const doc = await docRef.get();
-    if (!doc.exists) return undefined;
+    const careerAppRef = this.db.collection('careerApplications').doc(id);
+    const careerAppDoc = await careerAppRef.get();
+    if (!careerAppDoc.exists) return undefined;
 
     const updates = updateDocument<FirestoreCareerApplication>({ status });
-    await docRef.update(updates);
+    await careerAppRef.update(updates);
     
-    const updated = await docRef.get();
-    return this.parseDoc<FirestoreCareerApplication>(updated, careerApplicationSchema);
+    const updatedCareerApp = await careerAppRef.get();
+    return this.parseDoc<FirestoreCareerApplication>(updatedCareerApp, careerApplicationSchema);
   }
 
   // Student application operations
@@ -431,26 +433,27 @@ export class FirestoreStorage implements IStorage {
       courseId: String(application.courseId),
       // Optional fields with defaults
       status: application.status ?? 'pending',
-      phone: application.phone || undefined,
-      message: application.message || undefined
+      phone: application.phone ?? undefined,
+      message: application.message ?? undefined
     });
-    const docRef = await this.db.collection('studentApplications').add(newApplication);
-    return { ...newApplication as any, id: docRef.id };
+    const studentAppRef = await this.db.collection('studentApplications').add(newApplication);
+    return { ...newApplication as any, id: studentAppRef.id };
   }
+
 
   async updateStudentApplicationStatus(
     id: string, 
     status: FirestoreStudentApplication['status']
   ): Promise<FirestoreStudentApplication | undefined> {
-    const docRef = this.db.collection('studentApplications').doc(id);
-    const doc = await docRef.get();
-    if (!doc.exists) return undefined;
+    const studentAppRef = this.db.collection('studentApplications').doc(id);
+    const studentAppDoc = await studentAppRef.get();
+    if (!studentAppDoc.exists) return undefined;
 
     const updates = updateDocument<FirestoreStudentApplication>({ status });
-    await docRef.update(updates);
+    await studentAppRef.update(updates);
     
-    const updated = await docRef.get();
-    return this.parseDoc<FirestoreStudentApplication>(updated, studentApplicationSchema);
+    const updatedStudentApp = await studentAppRef.get();
+    return this.parseDoc<FirestoreStudentApplication>(updatedStudentApp, studentApplicationSchema);
   }
 
   // Contact message operations
@@ -477,15 +480,15 @@ export class FirestoreStorage implements IStorage {
   }
 
   async markContactMessageAsRead(id: string): Promise<FirestoreContactMessage | undefined> {
-    const docRef = this.db.collection('contactMessages').doc(id);
-    const doc = await docRef.get();
-    if (!doc.exists) return undefined;
+    const contactMessageRef = this.db.collection('contactMessages').doc(id);
+    const contactMessageDoc = await contactMessageRef.get();
+    if (!contactMessageDoc.exists) return undefined;
 
     const updates = updateDocument<FirestoreContactMessage>({ isRead: true });
-    await docRef.update(updates);
+    await contactMessageRef.update(updates);
     
-    const updated = await docRef.get();
-    return this.parseDoc<FirestoreContactMessage>(updated, contactMessageSchema);
+    const updatedContactMessage = await contactMessageRef.get();
+    return this.parseDoc<FirestoreContactMessage>(updatedContactMessage, contactMessageSchema);
   }
 
   // Admin dashboard operations

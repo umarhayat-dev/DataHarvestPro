@@ -30,7 +30,7 @@ const app = initializeApp({
   credential: cert(serviceAccount),
 });
 
-// Get Firestore instance
+// Get Firestore instance with ignoreUndefinedProperties
 const firestoreDb = _getFirestore(app);
 
 export { firestoreDb as db };
